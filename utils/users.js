@@ -1,8 +1,14 @@
 const users = [];
-
+var crypto = require("crypto");
 // Join user to chat
 function userJoin(id, username, room) {
-  const user = { id, username, room , members:[] };
+  const user = { 
+    id, 
+    username, 
+    room, 
+    members:[], 
+    key: crypto.randomBytes(12).toString('hex')
+  };
 
   users.push(user);
 

@@ -19,7 +19,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-const key = 'keykeykeykeykeykeykeykey';
+//const key = 'keykeykeykeykeykeykeykey';
 const nonce = crypto.randomBytes(12);
 const aad = Buffer.from('0123456789', 'hex');
 
@@ -31,7 +31,8 @@ const botName = 'KeyChat Bot';
 // Run when client connects
 io.on('connection', socket => {
   socket.on('joinRoom', ({ username, room }) => {
-    const user = userJoin(socket.id, username, room);
+
+    const user = userJoin(socket.id, username, room );
 
     socket.join(user.room);
 
@@ -58,7 +59,7 @@ io.on('connection', socket => {
     const user = getCurrentUser(socket.id);
 
     //encrypting messages using AES (192 bit key)
-    var mykey = crypto.createCipheriv('aes-192-ccm', key, nonce, {
+    var mykey = crypto.createCipheriv('aes-192-ccm', user.key, nonce, {
       authTagLength: 16
     });
     mykey.setAAD(aad, {
@@ -103,7 +104,7 @@ io.on('connection', socket => {
       console.log("This user can decrpyt this message")
 
       //decrypting message
-      const decipher = crypto.createDecipheriv('aes-192-ccm', key, nonce, {
+      const decipher = crypto.createDecipheriv('aes-192-ccm', sender.key, nonce, {
         authTagLength: 16
       });
       decipher.setAuthTag(message.tag);
